@@ -1,74 +1,37 @@
-import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
-import authClient from "~/lib/auth-client";
-import ThemeToggle from "~/lib/components/ThemeToggle";
-import { Button } from "~/lib/components/ui/button";
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import List from "~/lib/components/List";
+import UploadButton from "~/lib/components/uploadButton";
 
 export const Route = createFileRoute("/")({
   component: Home,
-  loader: ({ context }) => {
-    return { user: context.user };
-  },
 });
 
 function Home() {
-  const { queryClient } = Route.useRouteContext();
-  const { user } = Route.useLoaderData();
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+  const handleUpload = async (file: File) => {
+    console.log(file);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
-    <div className="flex flex-col gap-4 p-6">
-      <h1 className="text-4xl font-bold">React TanStarter</h1>
-      <div className="flex items-center gap-2">
-        This is an unprotected page:
-        <pre className="bg-card text-card-foreground rounded-md border p-1">
-          routes/index.tsx
-        </pre>
+    <div className="flex h-screen flex-col justify-between p-8">
+      <div>
+        <h1 className="pb-4 text-2xl font-bold">My Subscriptions</h1>
+        <List />
       </div>
-
-      {user ? (
-        <div className="flex flex-col gap-2">
-          <p>Welcome back, {user.name}!</p>
-          <Button type="button" asChild className="w-fit" size="lg">
-            <Link to="/dashboard">Go to Dashboard</Link>
-          </Button>
-          <div>
-            More data:
-            <pre>{JSON.stringify(user, null, 2)}</pre>
-          </div>
-
-          <Button
-            onClick={async () => {
-              await authClient.signOut();
-              await queryClient.invalidateQueries({ queryKey: ["user"] });
-              await router.invalidate();
-            }}
-            type="button"
-            className="w-fit"
-            variant="destructive"
-            size="lg"
-          >
-            Sign out
-          </Button>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2">
-          <p>You are not signed in.</p>
-          <Button type="button" asChild className="w-fit" size="lg">
-            <Link to="/signin">Sign in</Link>
-          </Button>
-        </div>
-      )}
-
-      <ThemeToggle />
-
-      <a
-        className="text-muted-foreground hover:text-foreground underline"
-        href="https://github.com/dotnize/react-tanstarter"
-        target="_blank"
-        rel="noreferrer noopener"
-      >
-        dotnize/react-tanstarter
-      </a>
+      <UploadButton onFileUpload={handleUpload} />
     </div>
   );
 }
