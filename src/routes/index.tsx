@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import List from "~/lib/components/List";
-import UploadButton from "~/lib/components/uploadButton";
+import UploadButton from "~/lib/components/UploadBtn";
 
 export const Route = createFileRoute("/")({
   component: Home,
