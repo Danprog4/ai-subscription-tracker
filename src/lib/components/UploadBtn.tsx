@@ -41,7 +41,7 @@ const UploadButton = ({
       const base64String = await fileToBase64(file);
       setFileName(base64String);
       if (onFileUpload) {
-        onFileUpload(fileName);
+        onFileUpload(base64String);
       }
     }
   };

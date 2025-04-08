@@ -8,26 +8,29 @@ const inputSchema = z.string();
 export const getSub = createServerFn({ method: "POST" })
   .validator((d: string) => {
     const result = inputSchema.safeParse(d);
+    console.log(result.data);
     if (!result.success) {
       throw new Error("Invalid input data");
     }
     return result.data;
   })
   .handler(async ({ data }) => {
+    console.log(data, "data");
     const result = await generateText({
-      model: google("gemini-1.5-flash"),
+      model: google("gemini-2.0-flash"),
       messages: [
         {
           role: "user",
+
           content: [
             {
               type: "text",
-              text: "send 'hello' if a send you image",
+              text: "describe this image in 2 sentences",
             },
             {
               type: "file",
               data: data,
-              mimeType: "application/pdf",
+              mimeType: "image/png",
             },
           ],
         },

@@ -10,9 +10,12 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  const [result, setResult] = useState("");
   const handleUpload = async (file: string) => {
     getSub({ data: file }).then((res) => {
       console.log(res);
+      setResult(res);
+      console.log(file);
     });
   };
 
@@ -33,6 +36,7 @@ function Home() {
       <div>
         <h1 className="pb-4 text-2xl font-bold">My Subscriptions</h1>
         <List />
+        <div>{result}</div>
       </div>
       <UploadButton onFileUpload={handleUpload} />
     </div>
