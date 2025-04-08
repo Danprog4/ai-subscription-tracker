@@ -1,16 +1,32 @@
 import { useRef, useState } from "react";
 
 type Props = {
-  onFileUpload?: (file: File) => void;
+  onFileUpload?: (file: string) => void;
   accept?: string;
   buttonText?: string;
 };
+
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        resolve(reader.result);
+      } else {
+        reject(new Error("Failed to convert file to base64"));
+      }
+    };
+    reader.onerror = (error) => reject(error);
+  });
+};
+
 const UploadButton = ({
   onFileUpload,
   accept = "image/*",
   buttonText = "Upload File",
 }: Props) => {
-  const [fileName, setFileName] = useState("");
+  const [fileName, setFileName] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -19,13 +35,18 @@ const UploadButton = ({
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFileName(file.name);
-      onFileUpload && onFileUpload(file);
+      const base64String = await fileToBase64(file);
+      setFileName(base64String);
+      if (onFileUpload) {
+        onFileUpload(fileName);
+      }
     }
   };
+
+  console.log(fileName);
 
   return (
     <div className="flex flex-col items-center">
@@ -43,7 +64,7 @@ const UploadButton = ({
         {buttonText}
       </button>
       {fileName && (
-        <p className="text-muted-foreground mt-2 text-sm">Selected: {fileName}</p>
+        <p className="text-muted-foreground mt-2 text-sm">File uploaded successfully</p>
       )}
     </div>
   );

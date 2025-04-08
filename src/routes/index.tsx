@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import List from "~/lib/components/List";
 import UploadButton from "~/lib/components/UploadBtn";
+import { getSub } from "~/lib/server/getSub";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -9,8 +10,10 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const handleUpload = async (file: File) => {
-    console.log(file);
+  const handleUpload = async (file: string) => {
+    getSub({ data: file }).then((res) => {
+      console.log(res);
+    });
   };
 
   useEffect(() => {
