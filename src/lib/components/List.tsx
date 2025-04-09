@@ -1,29 +1,44 @@
-import React, { useState } from "react";
 import Sub from "./Sub";
 
 interface ListItem {
-  id: string;
-  text: string;
-  dotColor?: string;
+  items: {
+    subscriptionName: string;
+    companyName: string;
+    type: "monthly" | "yearly";
+    price: number;
+    startDate: string;
+  }[];
+  setItems: (
+    items: Array<{
+      subscriptionName: string;
+      companyName: string;
+      type: "monthly" | "yearly";
+      price: number;
+      startDate: string;
+    }>,
+  ) => void;
 }
 
-const List: React.FC = () => {
-  const [items, setItems] = useState<ListItem[]>([
-    { id: "1", text: "Item 1", dotColor: "#8A4F9E" },
-    { id: "2", text: "Item 2", dotColor: "#69A5E4" },
-    { id: "3", text: "Item 3", dotColor: "#1B4EA3" },
-    { id: "6", text: "Item 6", dotColor: undefined },
-    { id: "7", text: "Item 7", dotColor: "#90C957" },
-  ]);
+// add id to items
 
-  const handleDelete = (id: string) => {
-    setItems(items.filter((item) => item.id !== id));
+const List = ({ items, setItems }: ListItem) => {
+  const handleDelete = (index: number) => {
+    setItems(items.filter((_, i) => i !== index));
   };
+
+  // Ensure items is an array and not empty
+  if (!Array.isArray(items) || items.length === 0) {
+    return null;
+  }
 
   return (
     <div className="mx-auto w-full max-w-[600px] overflow-hidden rounded-lg bg-[#F2F2F7] text-black shadow-sm">
-      {items.map((item) => (
-        <Sub key={item.id} onDelete={() => handleDelete(item.id)} text={item.text} />
+      {items.map((item, index) => (
+        <Sub
+          key={index}
+          onDelete={() => handleDelete(index)}
+          text={`${item.companyName} - ${item.subscriptionName}: $${item.price.toFixed(2)} (${item.type})`}
+        />
       ))}
     </div>
   );
