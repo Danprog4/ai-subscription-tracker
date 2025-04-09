@@ -39,10 +39,8 @@ function Home() {
         const parsedData = JSON.parse(cleanedText);
 
         if (typeof parsedData === "object" && parsedData !== null) {
-          // Convert to array if it's a single object
           const newItems = Array.isArray(parsedData) ? parsedData : [parsedData];
 
-          // Check if any of the new items already exist
           const isDuplicate = newItems.some((newItem) =>
             items.some(
               (existingItem) =>
@@ -56,7 +54,6 @@ function Home() {
             return;
           }
 
-          // Add all new items if no duplicates found
           setError("");
           setItems((prev) => [...prev, ...newItems]);
         }
