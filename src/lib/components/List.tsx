@@ -6,7 +6,7 @@ interface ListItem {
     companyName: string;
     type: "monthly" | "yearly";
     price: number;
-    startDate: string;
+    renewDate: string;
   }[];
   setItems: (
     items: Array<{
@@ -14,14 +14,23 @@ interface ListItem {
       companyName: string;
       type: "monthly" | "yearly";
       price: number;
-      startDate: string;
+      renewDate: string;
+    }>,
+  ) => void;
+  removeItems: (
+    items: Array<{
+      subscriptionName: string;
+      companyName: string;
+      type: "monthly" | "yearly";
+      price: number;
+      renewDate: string;
     }>,
   ) => void;
 }
 
 // add id to items
 
-const List = ({ items, setItems }: ListItem) => {
+const List = ({ items, setItems, removeItems }: ListItem) => {
   const handleDelete = (index: number) => {
     setItems(items.filter((_, i) => i !== index));
   };

@@ -24,14 +24,14 @@ export const getSub = createServerFn({ method: "POST" })
           content: [
             {
               type: "text",
-              text: `Analyze the provided image to extract the following data fields and return ONLY a JSON object that can be parse to js object in the future in the specified structure (do not add ${"```json ``` instead this just '{object here}'"}):
+              text: `Analyze the provided image to extract the following data fields and return ONLY a JSON object that can be parse to js object in the future in the specified structure (DO NOT ADD ${"```json ``` instead this just '{object here}'"}):
 
 {
   "subscriptionName": string, // Name of the subscription plan
   "companyName": string, // Name of the company
   "type": "monthly" | "yearly", // Type of subscription plan
   "price": number, // Price of the subscription
-  "startDate": utc_date // Renew date (optional in UTC format, may not always be present)
+  "renewDate": utc_date // Renew date (optional in UTC format, may not always be present)
 }
 
 Instructions:
@@ -42,7 +42,7 @@ Instructions:
 5. Do not include any additional commentary or text
 
 Example Outputs:
-If all fields are found: '{"subscriptionName":"Individual","companyName":"Apple Music","type":"monthly","price":1490.00,"startDate":"2024-04-24T00:00:00Z"}'
+If all fields are found: '{"subscriptionName":"Individual","companyName":"Apple Music","type":"monthly","price":1490.00,"renewDate":"2024-04-24T00:00:00Z"}'
 If any required field is missing: "error"`,
             },
             {

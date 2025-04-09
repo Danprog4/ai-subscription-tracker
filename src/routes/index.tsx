@@ -14,13 +14,13 @@ type Result = {
   companyName: string;
   type: "monthly" | "yearly";
   price: number;
-  startDate: string;
+  renewDate: string;
 };
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [items, setItems] = useLocalStorage<Result[]>("items-key", []);
+  const [items, setItems, removeItems] = useLocalStorage<Result[]>("items-key", []);
 
   const handleUpload = async (file: string) => {
     getSub({ data: file }).then((response) => {
@@ -32,11 +32,18 @@ function Home() {
       }
 
       try {
-        const cleanedText = response.trim().replace(/^['"]|['"]$/g, "");
+        const cleanedText = response
+          .trim()
+          .replace(/^['"]|['"]$/g, "")
+          .replace(/^```json\s*|\s*```$/g, "");
         const parsedData = JSON.parse(cleanedText);
 
         if (typeof parsedData === "object" && parsedData !== null) {
-          const isDuplicate = [parsedData].some((newItem) =>
+          // Convert to array if it's a single object
+          const newItems = Array.isArray(parsedData) ? parsedData : [parsedData];
+
+          // Check if any of the new items already exist
+          const isDuplicate = newItems.some((newItem) =>
             items.some(
               (existingItem) =>
                 existingItem.subscriptionName === newItem.subscriptionName &&
@@ -49,7 +56,9 @@ function Home() {
             return;
           }
 
-          setItems((prev) => [...prev, ...parsedData]);
+          // Add all new items if no duplicates found
+          setError("");
+          setItems((prev) => [...prev, ...newItems]);
         }
       } catch (error) {
         console.error("Failed to parse JSON from AI response:", error);
@@ -77,7 +86,7 @@ function Home() {
         <h1 className="pb-4 text-2xl font-bold">My Subscriptions</h1>
 
         {Array.isArray(items) && items.length > 0 ? (
-          <List items={items} setItems={setItems} />
+          <List items={items} setItems={setItems} removeItems={removeItems} />
         ) : (
           <div className="mx-auto w-full max-w-[600px] p-4 text-center text-gray-500">
             No subscriptions found. Upload a file to add subscriptions.
