@@ -18,9 +18,9 @@ const Sub: React.FC<SubProps> = ({ onDelete, text }) => {
     <div className="mb-[1px] bg-white">
       <SwipeToDelete
         onDelete={handleDelete}
-        height={50}
         transitionDuration={250}
         deleteWidth={75}
+        height={95}
         deleteColor="rgba(252, 58, 48, 1.00)"
         deleteText="Delete"
         disabled={false}
