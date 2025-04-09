@@ -49,7 +49,7 @@ const UploadButton = ({
   console.log(fileName);
 
   return (
-    <div className="relative mx-auto mb-5 flex min-h-[80px] max-w-[600px] flex-col items-center">
+    <div className="relative mx-auto mb-5 flex min-h-[80px] w-full flex-col items-center sm:w-[600px]">
       <input
         type="file"
         ref={fileInputRef}
