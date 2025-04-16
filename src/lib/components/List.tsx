@@ -46,7 +46,7 @@ const List = ({ items, setItems, removeItems }: ListItem) => {
         <Sub
           key={index}
           onDelete={() => handleDelete(index)}
-          text={`${item.companyName} - ${item.subscriptionName}: $${item.price.toFixed(2)} (${item.type})${item.renewDate ? ` - Renews on ${new Date(item.renewDate).toLocaleDateString()}` : ""}`}
+          text={`${item.companyName} - ${item.subscriptionName}: $${item.price} (${item.type})${item.renewDate ? ` - Renews on ${new Date(item.renewDate).toLocaleDateString()}` : ""}`}
         />
       ))}
     </div>
